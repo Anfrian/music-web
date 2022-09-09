@@ -14,7 +14,7 @@ def generate_unique_code():
 class Room(models.Model):
     code = models.CharField(
         max_length=8,
-        default="",
+        default=generate_unique_code,
         unique=True,
     )
     host = models.CharField(
