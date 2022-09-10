@@ -1,6 +1,7 @@
 from os import stat
 from urllib import request
 from django.shortcuts import render
+from django.http import JsonResponse
 from rest_framework import generics, status
 from .serializers import RoomSerializer, CreateRoomSerializer
 from .models import Room
@@ -16,7 +17,7 @@ class GetRoom(APIView):
     lookup_url_kwrag = 'code'
     
     def get(self, request, format=None):
-        code = request.GET.get(self.lookup_url_kwrag)
+        code = request.query_params.get(self.lookup_url_kwrag)
         if code != None:
             room = Room.objects.filter(code=code)
             if len(room) > 0:
@@ -25,6 +26,7 @@ class GetRoom(APIView):
                 return Response(data, status=status.HTTP_200_OK)
             return Response({'Room Not Found': 'Invalid Room Code'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+        
                 
 class JoinRoom(APIView):
     lookup_url_kwarg = 'code'
@@ -41,7 +43,6 @@ class JoinRoom(APIView):
                 return Response({'message': 'Joined!'}, status=status.HTTP_200_OK)
             return Response({'bad request':'invalid code'}, status=status.HTTP_400_BAD_REQUEST)
         return Response({'bad request':'invalid data could not find code key'}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class CreateRoomView(APIView):
@@ -72,3 +73,24 @@ class CreateRoomView(APIView):
                 room.save()
                 self.request.sesion['room_code'] = room.code
                 return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
+            
+class UserInRoom(APIView):
+    def get(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        data = {
+            'code': self.request.session.get('room_code')
+        }
+        return JsonResponse(data,status=status.HTTP_200_OK)
+    
+class LeaveRoom(APIView):
+    def post(self, request, format=None):
+        if 'room_code' in self.request.session:
+            self.request.session.pop('room_code')
+            host_id = self.request.session.session_key
+            room_results = Room.objects.filter(host=host_id)
+            if len(room_results) > 0:
+                room = room_results[0]
+                room.delete()
+        return Response({'message' : 'Success'}, status=status.HTTP_200_OK)
+    
