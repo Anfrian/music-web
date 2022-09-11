@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Initialise environment variables
 
 # Application definition
 
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'rest_framework',
     'frontend.apps.FrontendConfig',
+    'spotifyapi.apps.SpotifyapiConfig',
 ]
 
 MIDDLEWARE = [
