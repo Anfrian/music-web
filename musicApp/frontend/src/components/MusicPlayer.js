@@ -15,6 +15,14 @@ export default class MusicPlayer extends Component {
     super(props);
   }
 
+  pauseSong() {
+
+  }
+
+  playSong() {
+
+  }
+
   render() {
     const songProgress = (this.props.time / this.props.duration) * 100;
 
