@@ -55,7 +55,7 @@ export default class Room extends Component {
   }
 
   authenticateSpotify() {
-    fetch("/spotifyapi/is-authenticated")
+    fetch("/spotify/is-authenticated")
       .then((response) => response.json())
       .then((data) => {
         this.setState({ spotifyAuthenticated: data.status });
@@ -71,7 +71,7 @@ export default class Room extends Component {
   }
 
   getCurrentSong() {
-    fetch("/spotifyapi/current-song")
+    fetch("/spotify/current-song")
       .then((response) => {
         if (!response.ok) {
           return {};
