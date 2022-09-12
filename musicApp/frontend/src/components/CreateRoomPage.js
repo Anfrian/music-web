@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Collapse from "@material-ui/core/Collapse";
+import { Collapse } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 
 export default class CreateRoomPage extends Component {
